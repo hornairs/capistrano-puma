@@ -35,13 +35,8 @@ namespace :puma do
   desc 'Start puma'
   task :start do
     on roles (fetch(:puma_role)) do
-      within current_path do
-        # RVM has issues with bundler
-        if  fetch(:puma_cmd)
-          execute "#{fetch(:puma_cmd)} -C #{fetch(:puma_conf)}"
-        else
-          execute :puma, "-C #{fetch(:puma_conf)}"
-        end
+      within release_path do
+        execute "#{fetch(:puma_cmd, 'puma')} -C #{fetch(:puma_conf)}"
       end
     end
   end
@@ -50,13 +45,10 @@ namespace :puma do
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do
-        within current_path do
-          # RVM has issues with bundler
-          if  fetch(:pumactl_cmd)
-            execute "#{fetch(:pumactl_cmd)} -S #{fetch(:puma_state)} #{command}"
-          else
-            execute :pumactl, "-S #{fetch(:puma_state)} #{command}"
-          end
+        within release_path do
+          execute :pwd
+          execute :whoami
+          execute "#{fetch(:pumactl_cmd, 'pumactl')} -S #{fetch(:puma_state)} #{command}"
         end
       end
     end
