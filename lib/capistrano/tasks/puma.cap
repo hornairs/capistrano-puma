@@ -1,5 +1,5 @@
 namespace :deploy do
-  after :finished, 'puma:restart'
+  after :finished, 'puma:phased-restart'
 end
 
 namespace :load do
